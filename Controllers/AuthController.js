@@ -2,6 +2,8 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const crypto = require('crypto')
 const { PrismaClient } = require('@prisma/client')
+const { use } = require('../Routes/AuthRoutes')
+const { create } = require('domain')
 const prisma = new PrismaClient()
 const user = prisma.user
 
@@ -52,6 +54,34 @@ const SignIn = async (req, res) => {
     }
 }
 
+const SignUp = async (req, res) => {
+    const { username, password, companyId } = req.body
+    try {
+        const isUserValid = await user.findFirst({
+            where: {
+                username: username,
+            }
+        })
+        if (isUserValid) {
+            return res.status(400).json({ msg: "username already in use" })
+        }
+
+        const createData = await user.create({
+            data: {
+                username: user,
+                password: password
+            }
+        })
+
+        res.json({ msg: "SignUp Success" })
+
+    } catch (error ) {
+            console.log(error)
+    }
+
+}
+
 module.exports = {
-    SignIn
+    SignIn,
+    SignUp
 }

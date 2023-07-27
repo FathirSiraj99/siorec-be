@@ -83,6 +83,10 @@ const deleteCompany = async (req, res) => {
 
 module.exports = {
     getAll,
-    getById
+    getById,
+    deleteCompany,
+    updateCompany,
+    createCompany
+
 
 }

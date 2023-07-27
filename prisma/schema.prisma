@@ -8,11 +8,11 @@ generator client {
 }
 
 model company {
-    id     String @id @default(uuid())
-    name   String @unique
-    email  String @unique
-    alamat String
-    phone  String
+    id      String @id @default(uuid())
+    name    String @unique
+    email   String @unique
+    address String
+    phone   String
 
     user      user[]
     candidate candidate[]
