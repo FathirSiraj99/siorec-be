@@ -12,14 +12,13 @@ const signUp = async (req, res) => {
         })
         if (!isUserValid) {
             const createUsername = username
-            // const hashPassword = await bycrypt.hash(password, 10)
-
+            const hashPassword = await bycrypt.hash(password, 10)
             const data = await usersLogin.create({
                 datas: {
                     username: createUsername,
                     password: bcrypt.hashSync(req.body.password, 8),
                 }
-            }).then()
+            }).
 
             res.json({ msg: "Success Register" })
         } else {
