@@ -1,10 +1,10 @@
 const { PrismaClient } = require("@prisma/client");
 const Prisma = new PrismaClient()
-const company = Prisma.company
+const candidate = Prisma.candidate
 
 const getAll = async (req, res) => {
     try {
-        const data = await company.findMany()
+        const data = await candidate.findMany()
         res.status(200).json(data)
     } catch (error) {
         console.log(error)
@@ -14,7 +14,7 @@ const getAll = async (req, res) => {
 const getById = async (req, res) => {
     try {
         const { id } = req.params
-        const data = await company.findUnique(
+        const data = await candidate.findUnique(
             {
                 where: {
                     id: id
@@ -27,55 +27,51 @@ const getById = async (req, res) => {
     }
 }
 
-const createCompany = async (req, res) => {
-    const { name, address, email, phone} = req.body
+const createCandidate = async (req, res) => {
+    const { name, companyId } = req.body
     try {
-        await company.create({
+        await candidate.create({
             data: {
                 name: name,
-                address: address,
-                email:email,
-                phone: phone
+                companyId: companyId
             }
         })
-        res.status(201).json({ msg: "Company Created" })
+        res.status(201).json({ msg: "Candidate Created" })
     } catch (error) {
         console.log(error)
     }
 }
 
-const updateCompany = async (req, res) => {
+const updateCandidate = async (req, res) => {
     const { id } = req.params
-    const { name, address, email, phone } = req.body
+    const { name, companyId } = req.body
     try {
-        await company.update({
+        await candidate.update({
             where: {
                 id: id
             },
             data: {
                 name: name,
-                address: address,
-                email: email,
-                phone:phone
+                companyId: companyId
             }
         })
-        res.status(200).json({ msg: "Company updated" })
+        res.status(200).json({ msg: "Candidate Updated" })
     } catch (error) {
         console.log(error)
     }
 }
 
-const deleteCompany = async (req, res) => {
+const deleteCandidate = async (req, res) => {
     try {
         const { id } = req.params
-        await company.delete(
+        await candidate.delete(
             {
                 where: {
                     id: id
                 }
             }
         )
-        res.status(200).json({ msg: "Company Deleted" })
+        res.status(200).json({ msg: "Candidate Deleted" })
     } catch (error) {
         console.log(error)
     }
@@ -84,9 +80,7 @@ const deleteCompany = async (req, res) => {
 module.exports = {
     getAll,
     getById,
-    deleteCompany,
-    updateCompany,
-    createCompany
-
-
+    createCandidate,
+    updateCandidate,
+    deleteCandidate
 }
