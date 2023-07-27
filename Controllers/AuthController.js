@@ -14,8 +14,7 @@ const SignIn = async (req, res) => {
         //mencari data user yang mencoba login
         const isUserValid = await user.findFirst({
             where: {
-                username: username,
-                password: password,
+                username: username
             }
         })
 
@@ -43,8 +42,7 @@ const SignIn = async (req, res) => {
 
         const datas = {
             'token': token,
-            'role': getRole.role,
-
+            'role': getRole.role
         }
 
         res.json(datas)
@@ -66,10 +64,12 @@ const SignUp = async (req, res) => {
             return res.status(400).json({ msg: "username already in use" })
         }
 
-        const createData = await user.create({
+    const hashPassword = await bcrypt.hash(password,8)
+        await user.create({
             data: {
-                username: user,
-                password: password
+                username: username,
+                password: hashPassword,
+                companyId: companyId,
             }
         })
 
