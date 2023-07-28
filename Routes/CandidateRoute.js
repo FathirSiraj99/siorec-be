@@ -14,5 +14,9 @@ router.post('/create', createCandidate)
 router.patch('/updatee/:id', updateCandidate)
 router.delete('/delete/:id', deleteCandidate)
 
+<<<<<<< HEAD
 module.exports = router
 
+=======
+module.exports = router
+>>>>>>> e5d9c738a8caa0d88528bfe37ae239af90011ae2
