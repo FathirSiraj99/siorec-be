@@ -1,6 +1,11 @@
 const express = require('express')
 
-const { SignIn, SignUp, SignInCand, SignUpCand } = require('../Controllers/AuthController')
+const { 
+    SignIn,
+    SignUp,
+    SignInCand,
+    SignUpCand
+} = require('../Controllers/AuthController')
 
 const router = express.Router()
 

@@ -5,11 +5,12 @@ const {
     updateCandidate,
     deleteCandidate
 } = require('../Controllers/CandidateControlller')
+
 const router = express.Router()
 
 router.get('/', getAll)
 router.get('/:id', getById)
-router.patch('/updatee/:id', updateCandidate)
+router.patch('/update/:id', updateCandidate)
 router.delete('/delete/:id', deleteCandidate)
 
 module.exports = router

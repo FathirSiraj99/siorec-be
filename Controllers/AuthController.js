@@ -18,7 +18,7 @@ const SignIn = async (req, res) => {
                 username: username
             }
         })
-        console.log(isUserValid)
+        
         //mengecek apakah user nya ketemu atau tidak, jika tidak ketemu maka fungsi login ini akan berakhir
         if (!isUserValid) {
             return res.status(400).json({ msg: "user not found" })
@@ -88,22 +88,22 @@ const SignInCand = async (req, res) => {
     const { username, password } = req.body
     try {
 
-        const isUserValid = await cand.findFirst({
+        const isCandValid = await cand.findFirst({
             where: {
                 username: username
             }
         })
 
-        if (!isUserValid) {
-            return res.status(400).json({ msg: "user not found" })
+        if (!isCandValid) {
+            return res.status(400).json({ msg: "Candidate not found" })
         }
 
-        const isPasswordValid = await bcrypt.compare(password, isUserValid.password)
+        const isPasswordValid = await bcrypt.compare(password, isCandValid.password)
         if (!isPasswordValid) {
             return res.status(400).json({ msg: "password is not valid" })
         }
         const secretKey = crypto.randomBytes(10).toString('hex')
-        const token = jwt.sign({ id: isUserValid.id }, secretKey)
+        const token = jwt.sign({ id: isCandValid.id }, secretKey)
 
         const getRole = await cand.findFirst({
             where: {

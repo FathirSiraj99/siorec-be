@@ -87,6 +87,4 @@ module.exports = {
     deleteCompany,
     updateCompany,
     createCompany
-
-
 }

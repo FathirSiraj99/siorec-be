@@ -1,10 +1,12 @@
 const express = require('express')
 const {
+    getAll, 
+    getById,
     createCompany,
     updateCompany,
-    deleteCompany,
-    getAll, 
-    getById } = require('../Controllers/CompanyController')
+    deleteCompany
+} = require('../Controllers/CompanyController')
+
 const router = express.Router()
 
 router.get('/', getAll)
