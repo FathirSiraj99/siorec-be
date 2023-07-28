@@ -67,4 +67,4 @@ module.exports = {
     getById,
     updateCandidate,
     deleteCandidate
-}
+} 
