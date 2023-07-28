@@ -15,3 +15,5 @@ router.patch('/updatee/:id', updateCandidate)
 router.delete('/delete/:id', deleteCandidate)
 
 module.exports = router
+
+ZAMIL KONTOL
