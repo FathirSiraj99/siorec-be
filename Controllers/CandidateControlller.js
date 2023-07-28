@@ -28,11 +28,11 @@ const getById = async (req, res) => {
 }
 
 const createCandidate = async (req, res) => {
-    const { name, companyId } = req.body
+    const { username, companyId } = req.body
     try {
         await candidate.create({
             data: {
-                name: name,
+                username: username,
                 companyId: companyId
             }
         })
@@ -44,14 +44,14 @@ const createCandidate = async (req, res) => {
 
 const updateCandidate = async (req, res) => {
     const { id } = req.params
-    const { name, companyId } = req.body
+    const { username, companyId } = req.body
     try {
         await candidate.update({
             where: {
                 id: id
             },
             data: {
-                name: name,
+                username: username,
                 companyId: companyId
             }
         })

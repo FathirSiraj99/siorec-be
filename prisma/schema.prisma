@@ -29,7 +29,8 @@ model user {
 
 model candidate {
     id        String   @id @default(uuid())
-    name      String
+    username  String   @unique
+    password  String
     company   company? @relation(fields: [companyId], references: [id])
     companyId String?
 }
