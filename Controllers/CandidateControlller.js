@@ -27,21 +27,6 @@ const getById = async (req, res) => {
     }
 }
 
-const createCandidate = async (req, res) => {
-    const { username, companyId } = req.body
-    try {
-        await candidate.create({
-            data: {
-                username: username,
-                companyId: companyId
-            }
-        })
-        res.status(201).json({ msg: "Candidate Created" })
-    } catch (error) {
-        console.log(error)
-    }
-}
-
 const updateCandidate = async (req, res) => {
     const { id } = req.params
     const { username, companyId } = req.body
@@ -80,7 +65,6 @@ const deleteCandidate = async (req, res) => {
 module.exports = {
     getAll,
     getById,
-    createCandidate,
     updateCandidate,
     deleteCandidate
 }

@@ -6,6 +6,7 @@ const { use } = require('../Routes/AuthRoutes')
 const { create } = require('domain')
 const prisma = new PrismaClient()
 const user = prisma.user
+const cand = prisma.candidate
 
 const SignIn = async (req, res) => {
     //mengambil data dari metode post
@@ -17,7 +18,7 @@ const SignIn = async (req, res) => {
                 username: username
             }
         })
-
+        console.log(isUserValid)
         //mengecek apakah user nya ketemu atau tidak, jika tidak ketemu maka fungsi login ini akan berakhir
         if (!isUserValid) {
             return res.status(400).json({ msg: "user not found" })
@@ -55,6 +56,7 @@ const SignIn = async (req, res) => {
 const SignUp = async (req, res) => {
     const { username, password, companyId } = req.body
     try {
+        console.log(req.body)
         const isUserValid = await user.findFirst({
             where: {
                 username: username,
@@ -82,33 +84,28 @@ const SignUp = async (req, res) => {
 }
 
 const SignInCand = async (req, res) => {
-    //mengambil data dari metode post
+    
     const { username, password } = req.body
     try {
-        //mencari data user yang mencoba login
-        const isUserValid = await user.findFirst({
+
+        const isUserValid = await cand.findFirst({
             where: {
                 username: username
             }
         })
 
-        //mengecek apakah user nya ketemu atau tidak, jika tidak ketemu maka fungsi login ini akan berakhir
         if (!isUserValid) {
             return res.status(400).json({ msg: "user not found" })
         }
 
-        //mengecek apakah password yang di ketikan user ketika post data itu sama dengan password yang didapat dari mengecek isUserValid
         const isPasswordValid = await bcrypt.compare(password, isUserValid.password)
         if (!isPasswordValid) {
             return res.status(400).json({ msg: "password is not valid" })
         }
-
-        //menggenerate token secara random
         const secretKey = crypto.randomBytes(10).toString('hex')
         const token = jwt.sign({ id: isUserValid.id }, secretKey)
 
-        //mengecek user yang login itu siapa
-        const getRole = await user.findFirst({
+        const getRole = await cand.findFirst({
             where: {
                 username: username
             }
@@ -116,7 +113,6 @@ const SignInCand = async (req, res) => {
 
         const datas = {
             'token': token,
-            'role': getRole.role
         }
 
         res.json(datas)
@@ -129,20 +125,20 @@ const SignInCand = async (req, res) => {
 const SignUpCand = async (req, res) => {
     const { username, password } = req.body
     try {
-        const isUserValid = await user.findFirst({
+        const isCandValid = await cand.findFirst({
             where: {
                 username: username,
             }
         })
-        if (isUserValid) {
+        if (isCandValid) {
             return res.status(400).json({ msg: "username already in use" })
         }
 
     const hashPassword = await bcrypt.hash(password,8)
-        await user.create({
+        await cand.create({
             data: {
                 username: username,
-                password: hashPassword
+                password: hashPassword,
             }
         })
 
