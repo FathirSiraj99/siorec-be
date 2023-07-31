@@ -1,6 +1,6 @@
+const { PrismaClient } = require("@prisma/client");
 const Prisma = new PrismaClient()
 const candidate = Prisma.candidate
-const { PrismaClient } = require("@prisma/client");
 
 const getViewData = async (req, res) => {
     try {
