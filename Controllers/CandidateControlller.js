@@ -4,7 +4,10 @@ const candidate = Prisma.candidate
 
 const getViewData = async (req, res) => {
     try {
-        const rawQuery = await Prisma.$queryRawUnsafe(`SELECT candidate.username as username,candidate.id as id, company.name as company FROM candidate INNER JOIN company ON company.id=candidate.companyId`)
+        const rawQuery = await Prisma.$queryRawUnsafe
+            (
+                `SELECT candidate.username as username, candidate.id as id, company.name as company FROM candidate INNER JOIN company ON company.id = candidate.companyId`
+            )
         console.log(rawQuery)
         const datas = {
             'data': rawQuery
