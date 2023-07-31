@@ -9,7 +9,8 @@ const {
 
 const router = express.Router()
 
-router.get('/', getViewData)
+router.get('/', getAll)
+router.get('/view', getViewData)
 router.get('/:id', getById)
 router.patch('/update/:id', updateCandidate)
 router.delete('/delete/:id', deleteCandidate)
