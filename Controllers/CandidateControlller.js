@@ -2,6 +2,21 @@ const { PrismaClient } = require("@prisma/client");
 const Prisma = new PrismaClient()
 const candidate = Prisma.candidate
 
+const getViewData = async (req , res) => {
+    try {
+        const rawQuery = Prisma.$queryRawUnsafe(`SELECT candidate.username as username,candidate.id as id, company.name as company FROM candidate INNER JOIN company ON company.id=candidate."companyId"`)
+
+        const datas = {
+            'data' : rawQuery
+        }
+
+        res.json(datas)
+
+    } catch (error) {
+        
+    }
+}
+
 const getAll = async (req, res) => {
     try {
         const data = await candidate.findMany()
@@ -66,5 +81,6 @@ module.exports = {
     getAll,
     getById,
     updateCandidate,
-    deleteCandidate
+    deleteCandidate,
+    getViewData
 } 
