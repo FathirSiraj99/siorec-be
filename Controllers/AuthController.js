@@ -7,6 +7,7 @@ const { create } = require('domain')
 const prisma = new PrismaClient()
 const user = prisma.user
 const cand = prisma.candidate
+const comp = prisma.company
 
 const SignIn = async (req, res) => {
     //mengambil data dari metode post
@@ -18,7 +19,7 @@ const SignIn = async (req, res) => {
                 username: username
             }
         })
-        
+
         //mengecek apakah user nya ketemu atau tidak, jika tidak ketemu maka fungsi login ini akan berakhir
         if (!isUserValid) {
             return res.status(400).json({ msg: "user not found" })
@@ -41,9 +42,16 @@ const SignIn = async (req, res) => {
             }
         })
 
+        const getCompany = await comp.findFirst({
+            where: {
+                id: getRole.companyId
+            }
+        })
+console.log(getCompany)
         const datas = {
             'token': token,
-            'role': getRole.role
+            'role': getRole.role,
+            'id': getCompany.id
         }
 
         res.json(datas)
@@ -66,7 +74,7 @@ const SignUp = async (req, res) => {
             return res.status(400).json({ msg: "username already in use" })
         }
 
-    const hashPassword = await bcrypt.hash(password,8)
+        const hashPassword = await bcrypt.hash(password, 8)
         await user.create({
             data: {
                 username: username,
@@ -77,14 +85,14 @@ const SignUp = async (req, res) => {
 
         res.json({ msg: "SignUp Success" })
 
-    } catch (error ) {
-            console.log(error)
+    } catch (error) {
+        console.log(error)
     }
 
 }
 
 const SignInCand = async (req, res) => {
-    
+
     const { username, password } = req.body
     try {
 
@@ -134,7 +142,7 @@ const SignUpCand = async (req, res) => {
             return res.status(400).json({ msg: "username already in use" })
         }
 
-    const hashPassword = await bcrypt.hash(password,8)
+        const hashPassword = await bcrypt.hash(password, 8)
         await cand.create({
             data: {
                 username: username,
@@ -144,8 +152,8 @@ const SignUpCand = async (req, res) => {
 
         res.json({ msg: "SignUp Success" })
 
-    } catch (error ) {
-            console.log(error)
+    } catch (error) {
+        console.log(error)
     }
 
 }

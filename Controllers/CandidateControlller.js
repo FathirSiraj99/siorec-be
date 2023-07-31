@@ -1,6 +1,6 @@
-const { PrismaClient } = require("@prisma/client");
 const Prisma = new PrismaClient()
 const candidate = Prisma.candidate
+const { PrismaClient } = require("@prisma/client");
 
 const getViewData = async (req, res) => {
     try {
@@ -8,7 +8,6 @@ const getViewData = async (req, res) => {
             (
                 `SELECT candidate.username as username, candidate.id as id, company.name as company FROM candidate INNER JOIN company ON company.id = candidate.companyId`
             )
-        console.log(rawQuery)
         const datas = {
             'data': rawQuery
         }
