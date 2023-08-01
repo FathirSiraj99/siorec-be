@@ -1,25 +1,49 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken")
+const jwtSecret = 'c6e1c39411'
 
-const SECRET_KEY = 'qwerty';
-
-function authenticateToken(req, res, next) {
-  const token = req.header('Authorization');
-
-  if (!token) {
-    return res.status(401).json({ message: 'Token not found' });
+const superAdmin = (req, res, next) => {
+  const token = req.cookies.jwt
+  if (token) {
+    jwt.verify(token, jwtSecret, (err, decodedToken) => {
+      if (err) {
+        return res.status(401).json({ message: "Not authorized" })
+      } else {
+        if (decodedToken.role !== "admin") {
+          return res.status(401).json({ message: "Not authorized" })
+        } else {
+          next()
+        }
+      }
+    })
+  } else {
+    return res
+      .status(401)
+      .json({ message: "Not authorized, token not available" })
   }
+}
 
-  jwt.verify(token, SECRET_KEY, (err, user) => {
-    if (err) {
-      return res.status(403).json({ message: 'Invalid token' });
-    }
-
-    // Tambahkan informasi pengguna yang diverifikasi ke objek permintaan
-    req.user = user;
-    next();
-  });
+const companyAdmin = (req, res, next) => {
+  const token = req.cookies.jwt
+  if (token) {
+    jwt.verify(token, jwtSecret, (err, decodedToken) => {
+      if (err) {
+        return res.status(401).json({ message: "Not authorized" })
+      } else {
+        if (decodedToken.role !== "Basic") {
+          return res.status(401).json({ message: "Not authorized" })
+        } else {
+          next()
+        }
+      }
+    })
+  } else {
+    return res
+      .status(401)
+      .json({ message: "Not authorized, token not available" })
+  }
 }
 
 module.exports = {
-  authenticateToken
+  superAdmin,
+  companyAdmin
 }
