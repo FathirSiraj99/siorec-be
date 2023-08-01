@@ -1,5 +1,9 @@
 const express = require('express')
 
+const {
+    authenticateToken
+} = require('../Middleware/Auth')
+
 const { 
     SignIn,
     SignUp,
@@ -9,7 +13,9 @@ const {
 
 const router = express.Router()
 
-router.post('/signin',SignIn)
+router.post('/signin',authenticateToken, (req, res) =>{
+    res,SignIn
+})
 router.post('/signup',SignUp)
 router.post('/signincand',SignInCand)
 router.post('/signupcand',SignUpCand)

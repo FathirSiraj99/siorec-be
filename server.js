@@ -1,19 +1,17 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
-const Middleware = require('./Middleware/AuthMiddleware')
 const AuthRoute = require('./Routes/AuthRoutes')
 const CompanyRoute = require('./Routes/CompanyRoutes')
 const CandidateRoute = require('./Routes/CandidateRoute')
-const { Prisma, PrismaClient, role } = require('@prisma/client')
+const { Prisma, PrismaClient } = require('@prisma/client')
 const Role = Prisma.role
 const prisma = new PrismaClient()
+const auth = require('./Middleware/Auth')
 
 app.use(express.json())
 app.use(cors())
-
-app.get('/api/middleware',Middleware)
-// app.use('/api/auth',AuthRoute)
+app.use('/api/auth',AuthRoute)
 app.use('/api/comp',CompanyRoute)
 app.use('/api/cand',CandidateRoute)
 
