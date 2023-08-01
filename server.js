@@ -15,6 +15,6 @@ app.use('/api/auth',AuthRoute)
 app.use('/api/comp',CompanyRoute)
 app.use('/api/cand',CandidateRoute)
 
-app.listen(process.env.PORT, '192.168.18.213', () => {
+app.listen(process.env.PORT, '192.168.18.210', () => {
     console.log('berhasil')
 })
