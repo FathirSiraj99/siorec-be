@@ -1,8 +1,6 @@
 const express = require('express')
 
-const {
-    authenticateToken
-} = require('../Middleware/Auth')
+const { authenticateToken } = require('../Middleware/Auth')
 
 const { 
     SignIn,

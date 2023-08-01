@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const { authenticateToken } = require('../Middleware/Auth')
+const SECRET_KEY = require('../Middleware/Auth')
 const crypto = require('crypto')
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
@@ -138,8 +140,8 @@ const SignUpCand = async (req, res) => {
             return res.status(400).json({ msg: "username already in use" })
         }
 
-        const secretKey = crypto.randomBytes(10).toString('hex')
-        const token = jwt.sign({ id: cand.id }, secretKey)
+        // const secretKey = crypto.randomBytes(10).toString('hex')
+        const token = jwt.sign({ id: cand.id }, SECRET_KEY)
 
         console.log(token)
 
@@ -148,7 +150,7 @@ const SignUpCand = async (req, res) => {
             data: {
                 username: username,
                 password: hashPassword,
-                token:secretKey
+                token:SECRET_KEY
             }
         })
 
