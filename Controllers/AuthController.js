@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { authenticateToken } = require('../Middleware/Auth')
-const SECRET_KEY = require('../Middleware/Auth')
 const crypto = require('crypto')
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
@@ -108,7 +107,7 @@ const SignInCand = async (req, res) => {
         if (!isPasswordValid) {
             return res.status(400).json({ msg: "password is not valid" })
         }
-        const token = jwt.sign({ id: cand.id }, process.env.SECRET_KEY,
+        const token = jwt.sign({ id: cand.id }, process.env.SECRET_KEY, 
             {
               expiresIn: "2h",
             })
@@ -156,7 +155,7 @@ const SignUpCand = async (req, res) => {
             data: {
                 username: username,
                 password: hashPassword,
-                SECRET_KEY:token,
+                SECRET_KEY:secretKey,
             }
         })
 
