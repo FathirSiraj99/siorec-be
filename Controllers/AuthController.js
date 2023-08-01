@@ -1,6 +1,10 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { authenticateToken } = require('../Middleware/Auth')
+<<<<<<< HEAD
+const Auth = require('../Middleware/Auth')
+=======
+>>>>>>> cd004b654464de60e13a1d443ff07b3fb232fb03
 const crypto = require('crypto')
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
@@ -103,6 +107,12 @@ const SignInCand = async (req, res) => {
             return res.status(400).json({ msg: "Candidate not found" })
         }
 
+<<<<<<< HEAD
+        if(isCandValid && (await bcrypt.compare(password, isCandValid.password))) {
+            const token = jwt.sign({ id: cand.id }, process.env.SECRET_KEY,{expiresIn: "2h",})
+            const datas = {
+                'token': token
+=======
         const isPasswordValid = await bcrypt.compare(password, isCandValid.password)
         if (!isPasswordValid) {
             return res.status(400).json({ msg: "password is not valid" })
@@ -117,12 +127,19 @@ const SignInCand = async (req, res) => {
         const getRole = await cand.findFirst({
             where: {
                 username: username
+>>>>>>> cd004b654464de60e13a1d443ff07b3fb232fb03
             }
-        })
-
-        const datas = {
-            'token': token,
         }
+
+        cand.token = token
+
+        // if (!isPasswordValid) {
+        //     return res.status(400).json({ msg: "password is not valid" })
+        // }
+
+        console.log(token)
+      
+        res.json(cand);
 
         res.json(datas)
 
@@ -132,6 +149,7 @@ const SignInCand = async (req, res) => {
 }
 
 const SignUpCand = async (req, res) => {
+
     const { username, password } = req.body
     try {
         const isCandValid = await cand.findFirst({
@@ -143,25 +161,24 @@ const SignUpCand = async (req, res) => {
             return res.status(400).json({ msg: "username already in use" })
         }
 
-        // const secretKey = crypto.randomBytes(10).toString('hex')
-        const token = jwt.sign({ id: cand.id }, process.env.SECRET_KEY,
-            {
-              expiresIn: "2h",
-            })
-        console.log(token)
-
+        const token = jwt.sign({ id: cand.id }, process.env.SECRET_KEY,{expiresIn: "2h",})
+        
         const hashPassword = await bcrypt.hash(password, 8)
         await cand.create({
             data: {
                 username: username,
                 password: hashPassword,
+<<<<<<< HEAD
+                token: token
+=======
                 SECRET_KEY:secretKey,
+>>>>>>> cd004b654464de60e13a1d443ff07b3fb232fb03
             }
         })
+        
+        res.status(201).json(cand);
 
-        // cand.token = token;
-
-        res.status(201).json(user);
+        console.log(token)
 
         res.json({ msg: "SignUp Success" })
 

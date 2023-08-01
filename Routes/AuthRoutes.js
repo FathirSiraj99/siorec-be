@@ -11,9 +11,7 @@ const {
 
 const router = express.Router()
 
-router.post('/signin',authenticateToken, (req, res) =>{
-    res,SignIn
-})
+router.post('/signin',SignIn)
 router.post('/signup',SignUp)
 router.post('/signincand',authenticateToken, (req, res) =>{
     res,SignInCand
@@ -22,6 +20,6 @@ router.post('/signincand',authenticateToken, (req, res) =>{
 router.post('/signin',authenticateToken, (req, res) =>{
     res,SignIn
 })
-router.post('/signupcand',SignUpCandd)
+router.post('/signupcand',SignUpCand)
 
 module.exports = router
