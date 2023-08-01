@@ -1,7 +1,10 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { authenticateToken } = require('../Middleware/Auth')
+<<<<<<< HEAD
 const Auth = require('../Middleware/Auth')
+=======
+>>>>>>> cd004b654464de60e13a1d443ff07b3fb232fb03
 const crypto = require('crypto')
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
@@ -104,10 +107,27 @@ const SignInCand = async (req, res) => {
             return res.status(400).json({ msg: "Candidate not found" })
         }
 
+<<<<<<< HEAD
         if(isCandValid && (await bcrypt.compare(password, isCandValid.password))) {
             const token = jwt.sign({ id: cand.id }, process.env.SECRET_KEY,{expiresIn: "2h",})
             const datas = {
                 'token': token
+=======
+        const isPasswordValid = await bcrypt.compare(password, isCandValid.password)
+        if (!isPasswordValid) {
+            return res.status(400).json({ msg: "password is not valid" })
+        }
+        const token = jwt.sign({ id: cand.id }, process.env.SECRET_KEY, 
+            {
+              expiresIn: "2h",
+            })
+        console.log(token)
+
+
+        const getRole = await cand.findFirst({
+            where: {
+                username: username
+>>>>>>> cd004b654464de60e13a1d443ff07b3fb232fb03
             }
         }
 
@@ -148,7 +168,11 @@ const SignUpCand = async (req, res) => {
             data: {
                 username: username,
                 password: hashPassword,
+<<<<<<< HEAD
                 token: token
+=======
+                SECRET_KEY:secretKey,
+>>>>>>> cd004b654464de60e13a1d443ff07b3fb232fb03
             }
         })
         
