@@ -13,7 +13,7 @@ app.use(express.json())
 app.use(cors())
 
 app.get('/api/middleware',Middleware)
-app.use('/api/auth',AuthRoute)
+// app.use('/api/auth',AuthRoute)
 app.use('/api/comp',CompanyRoute)
 app.use('/api/cand',CandidateRoute)
 
