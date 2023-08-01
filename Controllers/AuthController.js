@@ -68,7 +68,7 @@ const SignUp = async (req, res) => {
         })
         if (isUserValid) {
             return res.status(400).json({ msg: "username already in use" })
-        }
+        }   
 
         const hashPassword = await bcrypt.hash(password, 8)
         await user.create({
