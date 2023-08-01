@@ -22,6 +22,6 @@ router.post('/signincand',authenticateToken, (req, res) =>{
 router.post('/signin',authenticateToken, (req, res) =>{
     res,SignIn
 })
-router.post('/signupcand',SignUpCand)
+router.post('/signupcand',SignUpCandd)
 
 module.exports = router
