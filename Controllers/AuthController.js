@@ -1,10 +1,5 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { authenticateToken } = require('../Middleware/Auth')
-<<<<<<< HEAD
-const Auth = require('../Middleware/Auth')
-=======
->>>>>>> cd004b654464de60e13a1d443ff07b3fb232fb03
 const crypto = require('crypto')
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
@@ -13,30 +8,32 @@ const cand = prisma.candidate
 const comp = prisma.company
 
 const SignIn = async (req, res) => {
-
+    //mengambil data dari metode post
     const { username, password } = req.body
     try {
-
+        //mencari data user yang mencoba login
         const isUserValid = await user.findFirst({
             where: {
                 username: username
             }
         })
 
-
+        //mengecek apakah user nya ketemu atau tidak, jika tidak ketemu maka fungsi login ini akan berakhir
         if (!isUserValid) {
             return res.status(400).json({ msg: "user not found" })
         }
 
-
+        //mengecek apakah password yang di ketikan user ketika post data itu sama dengan password yang didapat dari mengecek isUserValid
         const isPasswordValid = await bcrypt.compare(password, isUserValid.password)
         if (!isPasswordValid) {
             return res.status(400).json({ msg: "password is not valid" })
         }
 
+        //menggenerate token secara random
         const secretKey = crypto.randomBytes(10).toString('hex')
         const token = jwt.sign({ id: isUserValid.id }, secretKey)
 
+        //mengecek user yang login itu siapa
         const getRole = await user.findFirst({
             where: {
                 username: username
@@ -48,7 +45,7 @@ const SignIn = async (req, res) => {
                 id: getRole.companyId
             }
         })
-        console.log(getCompany)
+console.log(getCompany)
         const datas = {
             'token': token,
             'role': getRole.role,
@@ -107,39 +104,22 @@ const SignInCand = async (req, res) => {
             return res.status(400).json({ msg: "Candidate not found" })
         }
 
-<<<<<<< HEAD
-        if(isCandValid && (await bcrypt.compare(password, isCandValid.password))) {
-            const token = jwt.sign({ id: cand.id }, process.env.SECRET_KEY,{expiresIn: "2h",})
-            const datas = {
-                'token': token
-=======
         const isPasswordValid = await bcrypt.compare(password, isCandValid.password)
         if (!isPasswordValid) {
             return res.status(400).json({ msg: "password is not valid" })
         }
-        const token = jwt.sign({ id: cand.id }, process.env.SECRET_KEY, 
-            {
-              expiresIn: "2h",
-            })
-        console.log(token)
-
+        const secretKey = crypto.randomBytes(10).toString('hex')
+        const token = jwt.sign({ id: isCandValid.id }, secretKey)
 
         const getRole = await cand.findFirst({
             where: {
                 username: username
->>>>>>> cd004b654464de60e13a1d443ff07b3fb232fb03
             }
+        })
+
+        const datas = {
+            'token': token,
         }
-
-        cand.token = token
-
-        // if (!isPasswordValid) {
-        //     return res.status(400).json({ msg: "password is not valid" })
-        // }
-
-        console.log(token)
-      
-        res.json(cand);
 
         res.json(datas)
 
@@ -149,7 +129,6 @@ const SignInCand = async (req, res) => {
 }
 
 const SignUpCand = async (req, res) => {
-
     const { username, password } = req.body
     try {
         const isCandValid = await cand.findFirst({
@@ -161,24 +140,13 @@ const SignUpCand = async (req, res) => {
             return res.status(400).json({ msg: "username already in use" })
         }
 
-        const token = jwt.sign({ id: cand.id }, process.env.SECRET_KEY,{expiresIn: "2h",})
-        
         const hashPassword = await bcrypt.hash(password, 8)
         await cand.create({
             data: {
                 username: username,
                 password: hashPassword,
-<<<<<<< HEAD
-                token: token
-=======
-                SECRET_KEY:secretKey,
->>>>>>> cd004b654464de60e13a1d443ff07b3fb232fb03
             }
         })
-        
-        res.status(201).json(cand);
-
-        console.log(token)
 
         res.json({ msg: "SignUp Success" })
 
