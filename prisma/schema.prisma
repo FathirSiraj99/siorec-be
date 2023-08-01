@@ -33,7 +33,6 @@ model candidate {
     password  String
     company   company? @relation(fields: [companyId], references: [id])
     companyId String?
-    token     String
 }
 
 enum role {
