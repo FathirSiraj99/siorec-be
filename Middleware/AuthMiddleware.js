@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const SECRET_KEY = 'your_secret_key_here';
+const SECRET_KEY = 'qwerty';
 
 function authenticateToken(req, res, next) {
   const token = req.header('Authorization');
@@ -19,3 +19,5 @@ function authenticateToken(req, res, next) {
     next();
   });
 }
+
+module.exports = authenticateToken
