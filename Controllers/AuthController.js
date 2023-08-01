@@ -156,7 +156,7 @@ const SignUpCand = async (req, res) => {
             data: {
                 username: username,
                 password: hashPassword,
-                token:SECRET_KEY
+                SECRET_KEY:token,
             }
         })
 
