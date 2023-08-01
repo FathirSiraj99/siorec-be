@@ -108,8 +108,12 @@ const SignInCand = async (req, res) => {
         if (!isPasswordValid) {
             return res.status(400).json({ msg: "password is not valid" })
         }
-        const secretKey = crypto.randomBytes(10).toString('hex')
-        const token = jwt.sign({ id: isCandValid.id }, secretKey)
+        const token = jwt.sign({ id: cand.id }, process.env.SECRET_KEY,
+            {
+              expiresIn: "2h",
+            })
+        console.log(token)
+
 
         const getRole = await cand.findFirst({
             where: {
@@ -141,8 +145,10 @@ const SignUpCand = async (req, res) => {
         }
 
         // const secretKey = crypto.randomBytes(10).toString('hex')
-        const token = jwt.sign({ id: cand.id }, SECRET_KEY)
-
+        const token = jwt.sign({ id: cand.id }, process.env.SECRET_KEY,
+            {
+              expiresIn: "2h",
+            })
         console.log(token)
 
         const hashPassword = await bcrypt.hash(password, 8)

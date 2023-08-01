@@ -15,7 +15,9 @@ router.post('/signin',authenticateToken, (req, res) =>{
     res,SignIn
 })
 router.post('/signup',SignUp)
-router.post('/signincand',SignInCand)
+router.post('/signincand',authenticateToken, (req, res) =>{
+    res,SignInCand
+})
 
 router.post('/signin',authenticateToken, (req, res) =>{
     res,SignIn
