@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const crypto = require('crypto')
+const jwtSecret = 'c6e1c39411'
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const user = prisma.user
@@ -42,7 +43,7 @@ const SignIn = async (req, res) => {
         })
 
         console.log(getCompany)
-        
+
         const datas = {
             'token': token,
             'role': getRole.role,
@@ -87,45 +88,42 @@ const SignUp = async (req, res) => {
 }
 
 const SignInCand = async (req, res) => {
-
     const { username, password } = req.body
+    // Check if username and password is provided
+    if (!username || !password) {
+        return res.status(400).json({
+            message: "Username or Password not present",
+        })
+    }
     try {
-
-        const isCandValid = await cand.findFirst({
+        const user = await cand.findFirst   ({
             where: {
-                username: username
+                username:username
             }
         })
-
-        if (!isCandValid) {
-            return res.status(400).json({ msg: "Candidate not found" })
+        if (!user) {
+            res.status(400).json({
+                message: "Login not successful",
+                error: "User not found",
+            })
+        } else {
+            bcrypt.compare(password, user.password).then(function (result) {
+                result
+                    ? res.status(200).json({
+                        message: "Login successful",
+                        user,
+                    })
+                    : res.status(400).json({ message: "Login not succesful" })
+            })
         }
-
-        const isPasswordValid = await bcrypt.compare(password, isCandValid.password)
-
-        if (!isPasswordValid) {
-            return res.status(400).json({ msg: "password is not valid" })
-        }
-
-        const secretKey = crypto.randomBytes(10).toString('hex')
-        const token = jwt.sign({ id: isCandValid.id }, secretKey)
-
-        const getRole = await cand.findFirst({
-            where: {
-                username: username
-            }
-        })
-
-        const datas = {
-            'token': token,
-        }
-
-        res.json(datas)
-
     } catch (error) {
-        console.log(error)
+        res.status(400).json({
+            message: "An error occurred",
+            error: error.message,
+        })
     }
 }
+    
 
 const SignUpCand = async (req, res) => {
     const { username, password } = req.body
