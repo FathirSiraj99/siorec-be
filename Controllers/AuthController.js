@@ -8,22 +8,22 @@ const cand = prisma.candidate
 const comp = prisma.company
 
 const SignIn = async (req, res) => {
- 
+
     const { username, password } = req.body
     try {
-        
+
         const isUserValid = await user.findFirst({
             where: {
                 username: username
             }
         })
 
-       
+
         if (!isUserValid) {
             return res.status(400).json({ msg: "user not found" })
         }
 
-       
+
         const isPasswordValid = await bcrypt.compare(password, isUserValid.password)
         if (!isPasswordValid) {
             return res.status(400).json({ msg: "password is not valid" })
@@ -43,7 +43,7 @@ const SignIn = async (req, res) => {
                 id: getRole.companyId
             }
         })
-console.log(getCompany)
+        console.log(getCompany)
         const datas = {
             'token': token,
             'role': getRole.role,
@@ -68,7 +68,7 @@ const SignUp = async (req, res) => {
         })
         if (isUserValid) {
             return res.status(400).json({ msg: "username already in use" })
-        }   
+        }
 
         const hashPassword = await bcrypt.hash(password, 8)
         await user.create({
@@ -138,13 +138,23 @@ const SignUpCand = async (req, res) => {
             return res.status(400).json({ msg: "username already in use" })
         }
 
+        const secretKey = crypto.randomBytes(10).toString('hex')
+        const token = jwt.sign({ id: cand.id }, secretKey)
+
+        console.log(token)
+
         const hashPassword = await bcrypt.hash(password, 8)
         await cand.create({
             data: {
                 username: username,
                 password: hashPassword,
+                token:secretKey
             }
         })
+
+        // cand.token = token;
+
+        res.status(201).json(user);
 
         res.json({ msg: "SignUp Success" })
 

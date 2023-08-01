@@ -18,6 +18,10 @@ router.post('/signin',authenticateToken, (req, res) =>{
 })
 router.post('/signup',SignUp)
 router.post('/signincand',SignInCand)
+
+router.post('/signin',authenticateToken, (req, res) =>{
+    res,SignIn
+})
 router.post('/signupcand',SignUpCand)
 
 module.exports = router
