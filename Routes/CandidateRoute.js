@@ -7,14 +7,9 @@ const {
     getViewData
 } = require('../Controllers/CandidateControlller')
 
-const {
-    superAdmin,
-    companyAdmin
-}  = require('../Middleware/Auth')
-
 const router = express.Router()
 
-router.get('/', superAdmin,companyAdmin,getAll)
+router.get('/', getAll)
 router.get('/view', getViewData)
 router.get('/:id', getById)
 router.patch('/update/:id', updateCandidate)

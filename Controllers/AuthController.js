@@ -1,14 +1,12 @@
 const bcrypt = require('bcryptjs')
-const cookieParser = require("cookie-parser")
 const jwt = require('jsonwebtoken')
 const crypto = require('crypto')
-const jwtSecret = 'c6e1c39411'
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const user = prisma.user
 const cand = prisma.candidate
 const comp = prisma.company
-// app.use(cookieParser())
+require('dotenv').config
 
 const SignIn = async (req, res) => {
     const { username, password } = req.body
@@ -29,14 +27,8 @@ const SignIn = async (req, res) => {
             return res.status(400).json({ msg: "password is not valid" })
         }
 
-        const secretKey = crypto.randomBytes(10).toString('hex')
-        const token = jwt.sign({ id: isUserValid.id }, secretKey)
-
-        const getRole = await user.findFirst({
-            where: {
-                username: username
-            }
-        })
+        // const secretKey = crypto.randomBytes(10).toString('hex')
+        const token = jwt.sign({ id: isUserValid.id }, SECRET_KEY)
 
         const getCompany = await comp.findFirst({
             where: {
@@ -61,6 +53,9 @@ const SignIn = async (req, res) => {
 
 const SignUp = async (req, res) => {
     const { username, password, companyId } = req.body
+    if (password.length < 6) {
+        return res.status(400).json({ message: "Password less than 6 characters" })
+    }
     try {
         console.log(req.body)
         const isUserValid = await user.findFirst({
@@ -91,67 +86,35 @@ const SignUp = async (req, res) => {
 
 const SignInCand = async (req, res) => {
     const { username, password } = req.body
-    // Check if username and password is provided
-    if (!username || !password) {
-        return res.status(400).json({
-            message: "Username or Password not present",
-        })
-    }
     try {
-        const user = await cand.findFirst({
+        const isCandValid = await cand.findFirst({
             where: {
                 username: username
             }
         })
-        if (!user) {
-            res.status(400).json({
-                message: "Login not successful",
-                error: "User not found",
-            })
-        } else {
-            bcrypt.compare(password, user.password).then(function (result) {
 
-                if (result) {
-                    const maxAge = 3 * 60 * 60;
-                    const id = cand.id
-                    const token = jwt.sign(
-                        {
-                            id,
-                            username,
-                            password
-                        },
-                        jwtSecret,
-                        {
-                            expiresIn: maxAge, // 3hrs in sec
-                        }
-                    )
-
-
-                    res.cookie("jwt", token, {
-                        httpOnly: true,
-                        maxAge: maxAge * 1000, // 3hrs in ms
-                    })
-                };
-
-
-                result
-                    ? res.status(200).json({
-                        message: "Login successful",
-                        user,
-                    })
-                    : res.status(400).json({ message: "Login not succesful" })
-            })
+        if (!isCandValid) {
+            return res.status(400).json({ msg: "candidate not found" })
         }
+
+        const isPasswordValid = await bcrypt.compare(password, isCandValid.password)
+
+        if (!isPasswordValid) {
+            return res.status(400).json({ msg: "password is not valid" })
+        }
+
+        const token = jwt.sign({ id: isCandValid.id }, process.env.SECRET_KEY)
+
+        const datas = {
+            'token': token,
+        }
+
+        res.json(datas)
+
     } catch (error) {
-        res.status(400).json({
-            message: "An error occurred",
-            error: error.message,
-        })
+        console.log(error)
     }
 }
-
-
-
 
 const SignUpCand = async (req, res) => {
     const { username, password } = req.body
@@ -159,25 +122,30 @@ const SignUpCand = async (req, res) => {
         return res.status(400).json({ message: "Password less than 6 characters" })
     }
     try {
+        console.log(req.body)
+        const isCandValid = await cand.findFirst({
+            where: {
+                username: username,
+            }
+        })
+        if (isCandValid) {
+            return res.status(400).json({ msg: "username already in use" })
+        }
+
+        const hashPassword = await bcrypt.hash(password, 8)
         await cand.create({
             data: {
                 username: username,
-                password: password
+                password: hashPassword
             }
-        }).then(user =>
-            res.status(200).json({
-                message: "User successfully created",
-                user,
-            })
-        )
-    } catch (err) {
-        res.status(401).json({
-            message: "User not successful created",
-            error: error.mesage,
         })
+
+        res.json({ msg: "SignUp Success" })
+
+    } catch (error) {
+        console.log(error)
     }
 }
-
 
 module.exports = {
     SignIn,

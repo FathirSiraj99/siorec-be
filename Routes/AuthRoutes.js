@@ -1,5 +1,4 @@
 const express = require('express')
-
 const { 
     SignIn,
     SignUp,
@@ -13,9 +12,6 @@ router.post('/signin',SignIn)
 router.post('/signup',SignUp)
 router.post('/signincand',SignInCand)
 router.post('/signupcand',SignUpCand)
-router.get("/logout/:id", (req, res) => {
-    res.cookie("jwt", "", { maxAge: "1" })
-    res.redirect("/")
-  })    
+router.get("/logout/:id")    
 
 module.exports = router
